@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const App = () => {
   const [userScore, setUserScore] = useState(0);
@@ -6,6 +6,8 @@ const App = () => {
   const [userMove, setUserMove] = useState("");
   const [computerMove, setComputerMove] = useState("");
   const [result, setResult] = useState("");
+  const [userMainScore, setUserMainScore] = useState(0);
+  const [compMainScore, setCompMainScore] = useState(0);
 
   const moves = ["rock", "paper", "scissor"];
   const movesIcon = {
@@ -13,6 +15,22 @@ const App = () => {
     paper: "🖐️",
     scissor: "✌️",
   };
+
+  useEffect(
+    () => {
+      if (userScore >= 7) {
+        setUserMainScore(userMainScore + 1);
+        setUserScore(0);
+        setComputerScore(0);
+      } else if (computerScore >= 7) {
+        setCompMainScore(compMainScore + 1);
+        setUserScore(0);
+        setComputerScore(0);
+      }
+    },
+    [userScore],
+    [computerScore]
+  );
 
   const computerChoice = () => {
     const randomMove = Math.floor(Math.random() * 3);
@@ -86,7 +104,9 @@ const App = () => {
             </div>
             <div className="text-5xl flex flex-col items-center">
               {movesIcon[computerMove]}
-              <span className="text-lg sm:text-xl mt-2 text-gray-300">Computer</span>
+              <span className="text-lg sm:text-xl mt-2 text-gray-300">
+                Computer
+              </span>
             </div>
           </div>
         )}
@@ -103,6 +123,34 @@ const App = () => {
           ))}
         </div>
       </div>
+      <div className="text-center bg-gradient-to-bl from-violet-500 to-fuchsia-500 bg-clip-text text-transparent font-extrabold text-3xl mt-6">
+        First to 7 points wins a round!
+      </div>
+      <div className="text-center text-3xl mt-5">
+        <div>All Over Points</div>
+        <div className="flex justify-center mt-10">
+          <table className="border-2 w-[50%]">
+            <thead>
+              <tr className="border-2 w-full">
+                <th className="border-2 w-[50%]">You</th>
+                <th className="border-2 w-[50%]">Computer</th>
+              </tr>
+              <tr className="border-2 w-full">
+                <td className="border-2 w-[50%]">{userMainScore}</td>
+                <td className="border-2 w-[50%]">{compMainScore}</td>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+      <div className="text-center text-4xl mt-4">
+        {userMainScore === compMainScore
+          ? "Deadlock! Let's see who breaks it."
+          : userMainScore > compMainScore
+          ? "Come on! The computer is outperforming you."
+          : "Congratulations! You're ahead of the computer."}
+      </div>
+      
     </div>
   );
 };
